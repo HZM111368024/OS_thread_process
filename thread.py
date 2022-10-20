@@ -12,7 +12,7 @@ Matrix_C = []
 size_of_vectors_n = [int(math.pow(10, 2)), int(math.pow(10, 3)), int(math.pow(10, 4))]
 
 dimension_N = 50
-dimension_M = 30
+dimension_M = 80
 num_of_threads = 1
 
 np.set_printoptions(suppress=True)
@@ -45,11 +45,11 @@ def Initialize_Matrix():
     # Using numpy to generate matrix
     Matrix_A = np.fromfunction(funA, (dimension_N, dimension_M))
     Matrix_A = Matrix_A.astype(float)
-    print("Matrix_A : \n" + str(Matrix_A))
+    #print("Matrix_A : \n" + str(Matrix_A))
 
     Matrix_B = np.fromfunction(funB, (dimension_M, dimension_N))
     Matrix_B = Matrix_B.astype(float)
-    print("Matrix_B : \n" + str(Matrix_B))
+    #print("Matrix_B : \n" + str(Matrix_B))
 
     Matrix_C = np.zeros((dimension_N, dimension_N))
     Matrix_C = Matrix_C.astype(float)
@@ -80,13 +80,15 @@ def Thread_function():
             else:
                 t = Thread(target=Matrix_multiply_parallel_10,
                            args=(int((dimension_N / 5) * (j - 5)), int((dimension_N / 5) * (j - 4)), 50, int(j)))
+            thread_handle.append(t)
+            t.start()
     else:
         for j in range(0, num_of_threads):
             t = Thread(target=Matrix_multiply_parallel_50,
                        args=(int((dimension_N / num_of_threads) * j), int((dimension_N / num_of_threads) * (j + 1)),int(j)))
+            thread_handle.append(t)
+            t.start()
 
-    thread_handle.append(t)
-    t.start()
     for j in range(0, num_of_threads):
         thread_handle[j].join()
 
@@ -97,7 +99,7 @@ if __name__ == "__main__":
 
     start_time = time.time()
     Thread_function()
-    print("Matrix_C : \n" + str(Matrix_C))
+    #print("Matrix_C : \n" + str(Matrix_C))
     end_time = time.time()
 
     print("Time taken to multiply two matrices in parallel comes out to be : " + str(
