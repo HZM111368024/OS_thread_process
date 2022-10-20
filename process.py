@@ -67,7 +67,8 @@ def Multiprocess_function(result_Queue):
     print(num_of_processes)
     for j in range(0, num_of_processes):
         t = Process(target=Matrix_multiply_parallel,
-                    args=(Matrix_A, Matrix_B, result_Queue))
+                    args=(Matrix_A, Matrix_B, result_Queue, int((dimension_N / num_of_processes) * j),
+                          int((dimension_N / num_of_processes) * (j + 1))))
 
         multiprocess_handle.append(t)
         t.start()
